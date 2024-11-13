@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: healthcare-deploy
   labels:
-    app: healthcare-deploy
+    app: healthcare-app
 spec:
   replicas: 3
   selector:
