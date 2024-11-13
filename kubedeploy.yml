@@ -28,7 +28,7 @@ metadata:
     app: healthcare-app
 spec:
   selector:
-    app: healthcare-deploy
+    app: healthcare-app
 
   type: NodePort
   ports:
