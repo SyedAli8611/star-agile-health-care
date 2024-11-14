@@ -1,0 +1,131 @@
+provider "aws" {
+    region = "ap-south-1" 
+    access_key = "AKIA2YIB77BOFVM45XX2"
+    secret_key = "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" 
+}
+
+    resource "aws_security_group" "web_access" {
+    name        = "web_access_sg"
+    description = "Allow SSH and HTTP access"
+
+    ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  
+  }
+
+    ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  
+  }
+
+   ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  
+  }
+
+   ingress {
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  
+  }
+
+   ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    ingress {
+    from_port   = 2375
+    to_port     = 2375
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    ingress {
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+    egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"  
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_instance" "master_server" {
+    ami           = "ami-09b0a86a2c84101e1"  
+    instance_type = "t2.medium"
+    key_name      = "AWS-key"
+    security_groups = [aws_security_group.web_access.name]
+    tags = {
+        Name = "master_server"
+    }
+}
+
+resource "aws_instance" "test_server" {
+    ami           = "ami-09b0a86a2c84101e1"  
+    instance_type = "t2.micro"
+    key_name      = "AWS-key"
+    security_groups = [aws_security_group.web_access.name]
+    tags = {
+        Name = "test_server"
+    }
+}
+
+resource "aws_instance" "prod_server" {
+    ami           = "ami-09b0a86a2c84101e1"  
+    instance_type = "t2.medium"
+    key_name      = "AWS-key"
+    security_groups = [aws_security_group.web_access.name]
+    tags = {
+        Name = "prod_server"
+    }
+}
+
+resource "aws_instance" "K_master" {
+    ami           = "ami-09b0a86a2c84101e1"  
+    instance_type = "t2.micro"
+    key_name      = "AWS-key"
+    security_groups = [aws_security_group.web_access.name]
+    tags = {
+        Name = "K_master"
+    }
+}
+
+
+
+resource "aws_instance" "monitoring" {
+    ami           = "ami-08bf489a05e916bbd"  
+    instance_type = "t2.micro"
+    key_name      = "AWS-key"
+    security_groups = [aws_security_group.web_access.name]
+    tags = {
+        Name = "monitoring"
+    }
+}
