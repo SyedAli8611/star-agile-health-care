@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: healthcare-container
-        image: iamfaizanali/healthcare-automatic
+        image: iamfaizanali/healthcare
         ports:
         - containerPort: 8082
 ---
