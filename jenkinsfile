@@ -1,0 +1,86 @@
+pipeline {
+    agent any
+
+    environment {    
+        DOCKERHUB_CREDENTIALS = credentials('dockerid')
+    }
+        
+    stages {
+        stage('SCM Checkout') {
+            steps {
+                echo 'Performing SCM Checkout'
+                git url: 'https://github.com/SyedAli8611/star-agile-health-care.git'
+            }
+        }
+
+        stage('Application Build') {
+            steps {
+                echo 'Performing Application Build'
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                echo 'Performing Docker Build'
+                sh "docker build -t iamfaizanali/healthcare:${BUILD_NUMBER} ."
+                sh "docker tag iamfaizanali/healthcare:${BUILD_NUMBER} iamfaizanali/healthcare:latest"
+                sh 'docker image list'
+            }
+        }
+
+        stage('Login to DockerHub') {
+            steps {
+                echo 'Logging in to DockerHub'                
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+
+        stage('Publish the Image to DockerHub') {
+            steps {
+                echo 'Publishing to DockerHub'
+                sh "docker push iamfaizanali/healthcare:${BUILD_NUMBER}"                
+                sh "docker push iamfaizanali/healthcare:latest"
+            }
+        }
+
+        stage('Execute Ansible Playbook') {
+            steps {
+                script {
+                    ansiblePlaybook(
+                        become: true,
+                        credentialsId: 'ansible-cred',
+                        disableHostKeyChecking: true,
+                        installation: 'ansible',
+                        inventory: '/etc/ansible/hosts',
+                        playbook: 'ansible-playbook.yml'
+                    )
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'kubernetes',
+                                transfers: [
+                                    sshTransfer(
+                                        cleanRemote: false,
+                                        execCommand: 'kubectl apply -f kubedeploy.yml',
+                                        execTimeout: 120000,
+                                        remoteDirectory: '.',
+                                        sourceFiles: '*.yml'
+                                    )
+                                ],
+                                verbose: true
+                            )
+                        ]
+                    )
+                }
+            }
+        }
+    }
+}
