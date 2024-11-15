@@ -1,7 +1,7 @@
 provider "aws" {
     region = "ap-south-1" 
-    access_key = "AKIA2YIB77BOFVM45XX2"
-    secret_key = "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" 
+    access_key = "AKI"
+    secret_key = "4dwefbhwe" 
 }
 
     resource "aws_security_group" "web_access" {
@@ -79,9 +79,9 @@ provider "aws" {
 }
 
 resource "aws_instance" "master_server" {
-    ami           = "ami-09b0a86a2c84101e1"  
+    ami           = "ami-09b0"  
     instance_type = "t2.medium"
-    key_name      = "AWS-key"
+    key_name      = "key"
     security_groups = [aws_security_group.web_access.name]
     tags = {
         Name = "master_server"
@@ -89,9 +89,9 @@ resource "aws_instance" "master_server" {
 }
 
 resource "aws_instance" "test_server" {
-    ami           = "ami-09b0a86a2c84101e1"  
+    ami           = "ami"  
     instance_type = "t2.micro"
-    key_name      = "AWS-key"
+    key_name      = "key"
     security_groups = [aws_security_group.web_access.name]
     tags = {
         Name = "test_server"
@@ -99,9 +99,9 @@ resource "aws_instance" "test_server" {
 }
 
 resource "aws_instance" "prod_server" {
-    ami           = "ami-09b0a86a2c84101e1"  
+    ami           = "ami-"  
     instance_type = "t2.medium"
-    key_name      = "AWS-key"
+    key_name      = "key"
     security_groups = [aws_security_group.web_access.name]
     tags = {
         Name = "prod_server"
@@ -109,9 +109,9 @@ resource "aws_instance" "prod_server" {
 }
 
 resource "aws_instance" "K_master" {
-    ami           = "ami-09b0a86a2c84101e1"  
+    ami           = "ami-09b"  
     instance_type = "t2.micro"
-    key_name      = "AWS-key"
+    key_name      = "key"
     security_groups = [aws_security_group.web_access.name]
     tags = {
         Name = "K_master"
@@ -121,9 +121,9 @@ resource "aws_instance" "K_master" {
 
 
 resource "aws_instance" "monitoring" {
-    ami           = "ami-08bf489a05e916bbd"  
+    ami           = "ami-08b"  
     instance_type = "t2.micro"
-    key_name      = "AWS-key"
+    key_name      = "key"
     security_groups = [aws_security_group.web_access.name]
     tags = {
         Name = "monitoring"
